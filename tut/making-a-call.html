@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <title>Verto Docs - Making a Call</title>
+        <meta name="description" content="Verto Documentation">
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/syntax.css">
+        <link rel="stylesheet" href="/css/main.css">
+    </head>
+    <body>
+      
+        <a href="https://github.com/EvoluxBR/verto-docs">
+          <img style="position: absolute; top: 0; right: 0; border: 0;" 
+               src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
+               alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"/>
+        </a>
+
+        <div class="container">
+            <div class="row">
+                <div id="header" class="col-sm-12">
+                    <h4>
+  <a class="brand" href="/">Verto Docs</a>
+  <small>Verto Documentation</small>
+</h4>
+
+                </div>
+            </div>
+
+            <div class="row">
+                
+                
+                    <div id="navigation" class="col-sm-2">
+                        <ul class="nav nav-list">
+    <li><a href="/">Home</a></li>
+    
+        
+        
+	
+	
+	    
+	
+        
+    
+        
+        
+	
+	
+	    
+	
+        
+            
+                <li class="nav-header">Tutorial</li>
+            
+            <li data-order="1"><a href="/tut/getting-started.html">Getting Started</a></li>
+        
+            
+            <li data-order="2"><a href="/tut/installing-verto.html">Installing Verto</a></li>
+        
+            
+            <li data-order="3"><a href="/tut/initializing-verto.html">Initializing Verto</a></li>
+        
+            
+            <li data-order="4"><a href="/tut/making-a-call.html">Making a Call</a></li>
+        
+            
+            <li data-order="5"><a href="/tut/hanging-up-a-call.html">Hanging Up a Call</a></li>
+        
+            
+            <li data-order="6"><a href="/tut/answering-a-call.html">Answering a Call</a></li>
+        
+            
+            <li data-order="7"><a href="/tut/adding-video-support.html">Adding Video Support</a></li>
+        
+            
+            <li data-order="8"><a href="/tut/recovering-a-call.html">Recovering a Call</a></li>
+        
+    
+        
+        
+	
+	
+	    
+	
+        
+    
+        
+        
+	
+	
+	    
+	
+        
+            
+                <li class="nav-header">Developers</li>
+            
+            <li data-order="1"><a href="/dev/contributors.html">Contributors</a></li>
+        
+    
+<!-- List additional links. It is recommended to add a divider
+    e.g. <li class="divider"></li> first to break up the content. -->
+</ul>
+
+                    </div>
+
+                    <div id="content" class="col-sm-10">
+                        <div class="page-header">
+    <h2>Making a Call
+        
+    </h2>
+</div>
+
+<p>Since we&#39;ve got a Verto client working and connected to a Verto server, it&#39;s time to make an audio call.</p>
+
+<h2 id="building-interface">Building interface</h2>
+
+<p>Let&#39;s keep things simple and just add a button:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>Verto - Demo Application<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;make-call&quot;</span><span class="nt">&gt;</span>Make call<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/div&gt;</span> <span class="c">&lt;!-- /container --&gt;</span>
+</code></pre></div>
+<h2 id="binding-click">Binding click</h2>
+
+<p>Inside our bootstrap function add event bindings with a function callback so that we know when user clicked our Make Call button:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">bootstrap</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;make-call&quot;</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="nx">makeCall</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+<h2 id="specifying-current-call-variable">Specifying current call variable</h2>
+
+<p>We need to store our call session in somewhere if we need to reuse it later. Let&#39;s add it to our main function variables:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">vertoHandle</span><span class="p">,</span> <span class="nx">vertoCallbacks</span><span class="p">,</span> <span class="nx">currentCall</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="making-a-call">Making a call</h2>
+
+<p>We have to create the callback we&#39;ve specified to the event binding inside our main function.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">makeCall</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">currentCall</span> <span class="o">=</span> <span class="nx">vertoHandle</span><span class="p">.</span><span class="nx">newCall</span><span class="p">({</span>
+    <span class="nx">destination_number</span><span class="o">:</span> <span class="s2">&quot;3520&quot;</span><span class="p">,</span>
+    <span class="nx">caller_id_name</span><span class="o">:</span> <span class="s2">&quot;Test Guy&quot;</span><span class="p">,</span>
+    <span class="nx">caller_id_number</span><span class="o">:</span> <span class="s2">&quot;1008&quot;</span><span class="p">,</span>
+    <span class="nx">outgoingBandwidth</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="nx">incomingBandwidth</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="nx">useStereo</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">useMic</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">useSpeak</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">dedEnc</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">userVariables</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">avatar</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nx">email</span><span class="o">:</span> <span class="s2">&quot;test@test.com&quot;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>Now you should be able to make an audio call with Verto. But if you&#39;re able to make a new call you should be able do <a href="/tut/hanging-up-a-call.html">Hang up a Call</a>.</p>
+
+
+                    </div>
+                
+            </div>
+
+            
+            <div class="row">
+              
+                <div id="navigation" class="col-sm-2"></div>
+                <div id="disqus" class="col-sm-10">
+                    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'vertodocs'; // required: replace example with your forum shortname
+    var disqus_identifier = '2015-10-19-making-a-call';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+                </div>
+              
+            </div>
+            
+
+            <div class="row">
+                <div id="footer" class="col-sm-12">
+                    Documentation for <a href="">Verto Docs</a>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function orderNav() {
+                var list,
+                    section,
+                    header,
+                    sections = [],
+                    lists = {},
+                    headers = {};
+
+                var navUl = document.querySelectorAll('#navigation ul')[0],
+                    navLis = document.querySelectorAll('#navigation ul li');
+
+                if (!navUl) return;
+
+                for (var i = 0; i < navLis.length; i++) {
+                    var order, li = navLis[i];
+
+                    if (li.classList.contains('nav-header')) {
+                        section = li.textContent || li.innerText;
+                        sections.push(section);
+                        headers[section] = li;
+                        continue;
+                    }
+
+                    if (!lists[section]) {
+                        lists[section] = [];
+                    }
+
+                    order = parseFloat(li.getAttribute('data-order'))
+                    lists[section].push([order, li]);
+                }
+
+                for (var i = 0; i < sections.length; i++) {
+                    section = sections[i];
+                    list = lists[section].sort(function(a, b) {
+                        return a[0] - b[0];
+                    });
+
+                    if (header = headers[section]) {
+                        navUl.appendChild(header);
+                    }
+                    for (var j = 0; j < list.length; j++) {
+                        navUl.appendChild(list[j][1]);
+                    }
+                }
+            }
+
+            if (document.querySelectorAll) orderNav();
+        </script>
+        
+    </body>
+</html>

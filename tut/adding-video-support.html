@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <title>Verto Docs - Adding Video Support</title>
+        <meta name="description" content="Verto Documentation">
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/syntax.css">
+        <link rel="stylesheet" href="/css/main.css">
+    </head>
+    <body>
+      
+        <a href="https://github.com/EvoluxBR/verto-docs">
+          <img style="position: absolute; top: 0; right: 0; border: 0;" 
+               src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
+               alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"/>
+        </a>
+
+        <div class="container">
+            <div class="row">
+                <div id="header" class="col-sm-12">
+                    <h4>
+  <a class="brand" href="/">Verto Docs</a>
+  <small>Verto Documentation</small>
+</h4>
+
+                </div>
+            </div>
+
+            <div class="row">
+                
+                
+                    <div id="navigation" class="col-sm-2">
+                        <ul class="nav nav-list">
+    <li><a href="/">Home</a></li>
+    
+        
+        
+	
+	
+	    
+	
+        
+    
+        
+        
+	
+	
+	    
+	
+        
+            
+                <li class="nav-header">Tutorial</li>
+            
+            <li data-order="1"><a href="/tut/getting-started.html">Getting Started</a></li>
+        
+            
+            <li data-order="2"><a href="/tut/installing-verto.html">Installing Verto</a></li>
+        
+            
+            <li data-order="3"><a href="/tut/initializing-verto.html">Initializing Verto</a></li>
+        
+            
+            <li data-order="4"><a href="/tut/making-a-call.html">Making a Call</a></li>
+        
+            
+            <li data-order="5"><a href="/tut/hanging-up-a-call.html">Hanging Up a Call</a></li>
+        
+            
+            <li data-order="6"><a href="/tut/answering-a-call.html">Answering a Call</a></li>
+        
+            
+            <li data-order="7"><a href="/tut/adding-video-support.html">Adding Video Support</a></li>
+        
+            
+            <li data-order="8"><a href="/tut/recovering-a-call.html">Recovering a Call</a></li>
+        
+    
+        
+        
+	
+	
+	    
+	
+        
+    
+        
+        
+	
+	
+	    
+	
+        
+            
+                <li class="nav-header">Developers</li>
+            
+            <li data-order="1"><a href="/dev/contributors.html">Contributors</a></li>
+        
+    
+<!-- List additional links. It is recommended to add a divider
+    e.g. <li class="divider"></li> first to break up the content. -->
+</ul>
+
+                    </div>
+
+                    <div id="content" class="col-sm-10">
+                        <div class="page-header">
+    <h2>Adding Video Support
+        
+    </h2>
+</div>
+
+<p>Verto was built for video conferences, so adding support for it is very simple.</p>
+
+<h2 id="preparing-interface">Preparing interface</h2>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>Verto - Demo Application<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;make-call&quot;</span><span class="nt">&gt;</span>Make call<span class="nt">&lt;/button&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;hang-up-call&quot;</span><span class="nt">&gt;</span>Hang up call<span class="nt">&lt;/button&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;answer-call&quot;</span><span class="nt">&gt;</span>Answer call<span class="nt">&lt;/button&gt;</span>
+  <span class="nt">&lt;video</span> <span class="na">id=</span><span class="s">&quot;video-container&quot;</span> <span class="na">autoplay=</span><span class="s">&quot;autoplay&quot;</span> <span class="na">class=</span><span class="s">&quot;video-style&quot;</span><span class="nt">&gt;&lt;/video&gt;</span>
+<span class="nt">&lt;/div&gt;</span> <span class="c">&lt;!-- /container --&gt;</span>
+</code></pre></div>
+<h2 id="editing-bootstrap">Editing bootstrap</h2>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">bootstrap</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">vertoHandle</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">verto</span><span class="p">({</span>
+    <span class="nx">login</span><span class="o">:</span> <span class="s1">&#39;1008@127.0.0.1&#39;</span><span class="p">,</span>
+    <span class="nx">passwd</span><span class="o">:</span> <span class="s1">&#39;1234&#39;</span><span class="p">,</span>
+    <span class="nx">socketUrl</span><span class="o">:</span> <span class="s1">&#39;wss://127.0.0.1:8082&#39;</span><span class="p">,</span>
+    <span class="nx">ringFile</span><span class="o">:</span> <span class="s1">&#39;sounds/bell_ring2.wav&#39;</span><span class="p">,</span>
+    <span class="nx">tag</span><span class="o">:</span> <span class="s1">&#39;video-container&#39;</span><span class="p">,</span> <span class="c1">// specifying video tag in our html</span>
+    <span class="nx">deviceParams</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">useCamera</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="c1">// asking for camera permissions and devices</span>
+      <span class="nx">useMic</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nx">useSpeak</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="p">},</span>
+    <span class="nx">iceServers</span><span class="o">:</span> <span class="kc">true</span>
+  <span class="p">},</span> <span class="nx">vertoCallbacks</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+<h2 id="editing-makecall">Editing makeCall</h2>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">makeCall</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">currentCall</span> <span class="o">=</span> <span class="nx">vertoHandle</span><span class="p">.</span><span class="nx">newCall</span><span class="p">({</span>
+    <span class="nx">destination_number</span><span class="o">:</span> <span class="s2">&quot;3520&quot;</span><span class="p">,</span>
+    <span class="nx">caller_id_name</span><span class="o">:</span> <span class="s2">&quot;Test Guy&quot;</span><span class="p">,</span>
+    <span class="nx">caller_id_number</span><span class="o">:</span> <span class="s2">&quot;1008&quot;</span><span class="p">,</span>
+    <span class="nx">outgoingBandwidth</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="nx">incomingBandwidth</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="nx">useVideo</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="c1">// telling verto to make a call with video support</span>
+    <span class="nx">mirrorInput</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="c1">// telling verto to mirror user&#39;s webcam</span>
+    <span class="nx">useStereo</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">useMic</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">useSpeak</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">dedEnc</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">userVariables</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">avatar</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nx">email</span><span class="o">:</span> <span class="s2">&quot;test@test.com&quot;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+</code></pre></div>
+<h2 id="styling-video-tag">Styling video tag</h2>
+
+<p>Add something like this to your <code>style.css</code> file. Feel free to change and improve it with your taste.</p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.video-style</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">100%</span><span class="p">;</span>
+  <span class="k">height</span><span class="o">:</span> <span class="m">100%</span><span class="p">;</span>
+  <span class="n">object</span><span class="o">-</span><span class="n">fit</span><span class="o">:</span> <span class="k">inherit</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now you have full video support in Verto :)</p>
+
+<p>And if somethings fails, your internet connection goes down for a while or you browser crashes? <a href="/tut/recovering-a-call.html">Recovering a Call</a> looks like something more complex to do, doesn&#39;t?</p>
+
+
+                    </div>
+                
+            </div>
+
+            
+            <div class="row">
+              
+                <div id="navigation" class="col-sm-2"></div>
+                <div id="disqus" class="col-sm-10">
+                    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'vertodocs'; // required: replace example with your forum shortname
+    var disqus_identifier = '2015-10-19-adding-video-support';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+                </div>
+              
+            </div>
+            
+
+            <div class="row">
+                <div id="footer" class="col-sm-12">
+                    Documentation for <a href="">Verto Docs</a>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function orderNav() {
+                var list,
+                    section,
+                    header,
+                    sections = [],
+                    lists = {},
+                    headers = {};
+
+                var navUl = document.querySelectorAll('#navigation ul')[0],
+                    navLis = document.querySelectorAll('#navigation ul li');
+
+                if (!navUl) return;
+
+                for (var i = 0; i < navLis.length; i++) {
+                    var order, li = navLis[i];
+
+                    if (li.classList.contains('nav-header')) {
+                        section = li.textContent || li.innerText;
+                        sections.push(section);
+                        headers[section] = li;
+                        continue;
+                    }
+
+                    if (!lists[section]) {
+                        lists[section] = [];
+                    }
+
+                    order = parseFloat(li.getAttribute('data-order'))
+                    lists[section].push([order, li]);
+                }
+
+                for (var i = 0; i < sections.length; i++) {
+                    section = sections[i];
+                    list = lists[section].sort(function(a, b) {
+                        return a[0] - b[0];
+                    });
+
+                    if (header = headers[section]) {
+                        navUl.appendChild(header);
+                    }
+                    for (var j = 0; j < list.length; j++) {
+                        navUl.appendChild(list[j][1]);
+                    }
+                }
+            }
+
+            if (document.querySelectorAll) orderNav();
+        </script>
+        
+    </body>
+</html>

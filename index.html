@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <title>Verto Docs - Index</title>
+        <meta name="description" content="Verto Documentation">
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/syntax.css">
+        <link rel="stylesheet" href="/css/main.css">
+    </head>
+    <body>
+      
+        <a href="https://github.com/EvoluxBR/verto-docs">
+          <img style="position: absolute; top: 0; right: 0; border: 0;" 
+               src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
+               alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"/>
+        </a>
+
+        <div class="container">
+            <div class="row">
+                <div id="header" class="col-sm-12">
+                    <h4>
+  <a class="brand" href="/">Verto Docs</a>
+  <small>Verto Documentation</small>
+</h4>
+
+                </div>
+            </div>
+
+            <div class="row">
+                
+                
+                    <div id="navigation" class="col-sm-2">
+                        <ul class="nav nav-list">
+    <li><a href="/">Home</a></li>
+    
+        
+        
+	
+	
+	    
+	
+        
+    
+        
+        
+	
+	
+	    
+	
+        
+            
+                <li class="nav-header">Tutorial</li>
+            
+            <li data-order="1"><a href="/tut/getting-started.html">Getting Started</a></li>
+        
+            
+            <li data-order="2"><a href="/tut/installing-verto.html">Installing Verto</a></li>
+        
+            
+            <li data-order="3"><a href="/tut/initializing-verto.html">Initializing Verto</a></li>
+        
+            
+            <li data-order="4"><a href="/tut/making-a-call.html">Making a Call</a></li>
+        
+            
+            <li data-order="5"><a href="/tut/hanging-up-a-call.html">Hanging Up a Call</a></li>
+        
+            
+            <li data-order="6"><a href="/tut/answering-a-call.html">Answering a Call</a></li>
+        
+            
+            <li data-order="7"><a href="/tut/adding-video-support.html">Adding Video Support</a></li>
+        
+            
+            <li data-order="8"><a href="/tut/recovering-a-call.html">Recovering a Call</a></li>
+        
+    
+        
+        
+	
+	
+	    
+	
+        
+    
+        
+        
+	
+	
+	    
+	
+        
+            
+                <li class="nav-header">Developers</li>
+            
+            <li data-order="1"><a href="/dev/contributors.html">Contributors</a></li>
+        
+    
+<!-- List additional links. It is recommended to add a divider
+    e.g. <li class="divider"></li> first to break up the content. -->
+</ul>
+
+                    </div>
+
+                    <div id="content" class="col-sm-10">
+                        <h2 id="what-39-s-verto">What&#39;s Verto</h2>
+
+<p>Verto is a WebRTC communication platform based on <a href="https://freeswitch.org/">FreeSWITCH</a>. We divide it in three other projects: mod_verto, verto and verto-communicator. </p>
+
+<h2 id="verto-projects">Verto projects</h2>
+
+<h3 id="mod_verto">mod_verto</h3>
+
+<p>It&#39;s the FreeSWITCH module responsible for abstracting SIP protocol. It makes easier to connect through a web socket and make audio and video calls. Its development is bundled with FreeSWITCH core.</p>
+
+<h3 id="verto">verto</h3>
+
+<p>The jQuery library which connects and deals with FreeSWITCH mod_verto through a web socket.</p>
+
+<h3 id="verto-communicator">verto-communicator</h3>
+
+<p><a href="https://freeswitch.org/confluence/display/FREESWITCH/Verto+Communicator">Verto Communicator</a> is the web application responsible for expose mod_verto features to users. It&#39;s based on verto jQuery library and uses AngularJS.</p>
+
+<h2 id="what-will-be-covered">What will be covered</h2>
+
+<p>In this tutorial, we&#39;re going to learn by examples how to install, import and use verto jQuery library to create a basic video conference web application.</p>
+
+<ul>
+<li><a href="/tut/getting-started.html">getting started</a></li>
+<li><a href="/tut/installing-verto.html">installing verto</a></li>
+<li><a href="/tut/initializing-verto.html">importing and initializing verto</a></li>
+<li><a href="/tut/making-a-call.html">making an audio call</a></li>
+<li><a href="/tut/hanging-up-a-call.html">hanging up a call</a></li>
+<li><a href="/tut/answering-a-call.html">answerign a call</a></li>
+<li><a href="/tut/adding-video-support.html">adding video support</a></li>
+<li><a href="/tut/recovering-a-call.html">recovering a call</a></li>
+</ul>
+
+<p><a href="/tut/getting-started.html">Click here and get started</a>.</p>
+
+                    </div>
+                
+            </div>
+
+            
+
+            <div class="row">
+                <div id="footer" class="col-sm-12">
+                    Documentation for <a href="">Verto Docs</a>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function orderNav() {
+                var list,
+                    section,
+                    header,
+                    sections = [],
+                    lists = {},
+                    headers = {};
+
+                var navUl = document.querySelectorAll('#navigation ul')[0],
+                    navLis = document.querySelectorAll('#navigation ul li');
+
+                if (!navUl) return;
+
+                for (var i = 0; i < navLis.length; i++) {
+                    var order, li = navLis[i];
+
+                    if (li.classList.contains('nav-header')) {
+                        section = li.textContent || li.innerText;
+                        sections.push(section);
+                        headers[section] = li;
+                        continue;
+                    }
+
+                    if (!lists[section]) {
+                        lists[section] = [];
+                    }
+
+                    order = parseFloat(li.getAttribute('data-order'))
+                    lists[section].push([order, li]);
+                }
+
+                for (var i = 0; i < sections.length; i++) {
+                    section = sections[i];
+                    list = lists[section].sort(function(a, b) {
+                        return a[0] - b[0];
+                    });
+
+                    if (header = headers[section]) {
+                        navUl.appendChild(header);
+                    }
+                    for (var j = 0; j < list.length; j++) {
+                        navUl.appendChild(list[j][1]);
+                    }
+                }
+            }
+
+            if (document.querySelectorAll) orderNav();
+        </script>
+        
+    </body>
+</html>
