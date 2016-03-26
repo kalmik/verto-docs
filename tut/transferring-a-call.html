@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width">
 
-        <title>Verto Docs - Installing Verto</title>
+        <title>Verto Docs - Transferring a Call</title>
         <meta name="description" content="Verto Documentation">
 
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
@@ -64,7 +64,7 @@
             
             <li data-order="2">
                 
-                <a href="/verto-docs/tut/installing-verto.html" class="active">
+                <a href="/verto-docs/tut/installing-verto.html">
                     Installing Verto
                 </a>
                 
@@ -145,7 +145,7 @@
             
             <li data-order="11">
                 
-                <a href="/verto-docs/tut/transferring-a-call.html">
+                <a href="/verto-docs/tut/transferring-a-call.html" class="active">
                     Transferring a Call
                 </a>
                 
@@ -183,42 +183,42 @@
 
                     <div id="content" class="col-sm-10">
                         <div class="page-header">
-    <h2>Installing Verto
+    <h2>Transferring a Call
         
     </h2>
 </div>
 
-<p>Before we can use Verto, we&#39;ll need to install it. There are two options available:</p>
+<p>One of the most important telephony feature is the Transfer.
+As everything we have done with Verto until now, transferring a call will be easy.</p>
 
-<ul>
-<li>Install FreeSWITCH + Verto</li>
-<li>Install Verto only</li>
-</ul>
+<h2 id="preparing-interface">Preparing interface</h2>
 
-<p>If you&#39;re going to use a self hosted FreeSWITCH server you can just use the <a href="https://freeswitch.org/confluence/display/FREESWITCH/FreeSWITCH+1.6+Video">FreeSWITCH/Verto Installation Guide</a> as it already comes with Verto.</p>
-
-<p>If you have an external FreeSWITCH server with mod_verto enabled or just wish to use Verto stand-alone, follow the next steps.</p>
-
-<h2 id="requirements">Requirements</h2>
-
-<p>We need <a href="https://nodejs.org/">Node.js</a> installed in order to have access to its package manager, <strong>npm</strong>.</p>
-
-<h2 id="installing">Installing</h2>
-
-<h3 id="verto">Verto</h3>
-
-<p>With <a href="https://nodejs.org/">Node.js</a> installed and Node Package Manager available, install verto library <strong>inside</strong> <code>lib/</code> directory.:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install verto
+<p>Adding button...</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>Verto - Demo Application<span class="nt">&lt;/h1&gt;</span>
+  <span class="c">&lt;!-- ... --&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;unhold-call&quot;</span><span class="nt">&gt;</span>Transfer call<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/div&gt;</span> <span class="c">&lt;!-- /container --&gt;</span>
 </code></pre></div>
-<p>Verto library should be installed in <code>lib/node_modules/verto/</code> directory now.</p>
+<h2 id="binding-click">Binding click</h2>
 
-<h3 id="dependencies">Dependencies</h3>
-
-<p>Verto depends on jQuery and jQuery JSON, so let&#39;s install them too:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install jquery
-npm install jquery-json
+<p>Inside our bootstrap function add event binding with a function callback so that we know when user clicked our Transfer button:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">bootstrap</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;transfer-call&quot;</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="nx">transferCall</span><span class="p">);</span>
+<span class="p">};</span>
 </code></pre></div>
-<p><a href="/verto-docs/tut/initializing-verto.html">Next step is import and initialize Verto in our project</a>.</p>
+<h2 id="transferring-a-call">Transferring a call</h2>
+
+<p>We have to create the callback we&#39;ve specified to the event binding inside our main function.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">transferCall</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">destinationNumber</span> <span class="o">=</span> <span class="nx">prompt</span><span class="p">(</span><span class="s2">&quot;Insert transfer destination number&quot;</span><span class="p">);</span>
+  <span class="k">if</span><span class="p">(</span><span class="nx">destinationNumber</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">currentCall</span><span class="p">.</span><span class="nx">transfer</span><span class="p">(</span><span class="nx">destinationNumber</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>Try it and see by yourself how easy is to transfer a call with Verto library.</p>
 
 
                     </div>
@@ -234,7 +234,7 @@ npm install jquery-json
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
     var disqus_shortname = 'vertodocs'; // required: replace example with your forum shortname
-    var disqus_identifier = '2015-10-19-installing-verto';
+    var disqus_identifier = '2016-03-26-transferring-a-call';
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
