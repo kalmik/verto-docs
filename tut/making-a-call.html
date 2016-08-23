@@ -8,7 +8,7 @@
         <title>Verto Docs - Making a Call</title>
         <meta name="description" content="Verto Documentation">
 
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/verto-docs/css/bootstrap.min.css">
         <link rel="stylesheet" href="/verto-docs/css/syntax.css">
         <link rel="stylesheet" href="/verto-docs/css/main.css">
     </head>
@@ -151,6 +151,51 @@
                 
             </li>
         
+            
+            <li data-order="12">
+                
+                <a href="/verto-docs/tut/subscribing-to-the-live-array.html">
+                    Subscribing to the live array
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="13">
+                
+                <a href="/verto-docs/tut/sending-conference-commands.html">
+                    Sending conference commands
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="14">
+                
+                <a href="/verto-docs/tut/sending-dtmf.html">
+                    Sending DTMF
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="15">
+                
+                <a href="/verto-docs/tut/sending-chat-messages.html">
+                    Sending chat messages
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="16">
+                
+                <a href="/verto-docs/tut/testing-bandwidth.html">
+                    Testing bandwidth
+                </a>
+                
+            </li>
+        
     
         
         
@@ -215,24 +260,63 @@
 
 <p>We have to create the callback we&#39;ve specified to the event binding inside our main function.</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">makeCall</span><span class="p">()</span> <span class="p">{</span>
+
   <span class="nx">currentCall</span> <span class="o">=</span> <span class="nx">vertoHandle</span><span class="p">.</span><span class="nx">newCall</span><span class="p">({</span>
-    <span class="nx">destination_number</span><span class="o">:</span> <span class="s2">&quot;3520&quot;</span><span class="p">,</span>
-    <span class="nx">caller_id_name</span><span class="o">:</span> <span class="s2">&quot;Test Guy&quot;</span><span class="p">,</span>
-    <span class="nx">caller_id_number</span><span class="o">:</span> <span class="s2">&quot;1008&quot;</span><span class="p">,</span>
-    <span class="nx">outgoingBandwidth</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="nx">incomingBandwidth</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="c1">// Extension to dial.</span>
+    <span class="nx">destination_number</span><span class="o">:</span> <span class="s1">&#39;3520&#39;</span><span class="p">,</span>
+    <span class="nx">caller_id_name</span><span class="o">:</span> <span class="s1">&#39;Test Guy&#39;</span><span class="p">,</span>
+    <span class="nx">caller_id_number</span><span class="o">:</span> <span class="s1">&#39;1008&#39;</span><span class="p">,</span>
+    <span class="nx">outgoingBandwidth</span><span class="o">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
+    <span class="nx">incomingBandwidth</span><span class="o">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
+    <span class="c1">// Enable stereo audio.</span>
     <span class="nx">useStereo</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">useMic</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">useSpeak</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">dedEnc</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="c1">// You can pass any application/call specific variables here, and they will</span>
+    <span class="c1">// be available as a dialplan variable, prefixed with &#39;verto_dvar_&#39;.</span>
     <span class="nx">userVariables</span><span class="o">:</span> <span class="p">{</span>
-      <span class="nx">avatar</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-      <span class="nx">email</span><span class="o">:</span> <span class="s2">&quot;test@test.com&quot;</span>
-    <span class="p">}</span>
+      <span class="c1">// Shows up as a &#39;verto_dvar_email&#39; dialplan variable.</span>
+      <span class="nx">email</span><span class="o">:</span> <span class="s1">&#39;test@test.com&#39;</span>
+    <span class="p">},</span>
+    <span class="c1">// Use a dedicated outbound encoder for this user&#39;s video.</span>
+    <span class="c1">// NOTE: This is generally only needed if the user has some kind of</span>
+    <span class="c1">// non-standard video setup, and is not recommended to use, as it</span>
+    <span class="c1">// dramatically increases the CPU usage for the conference.</span>
+    <span class="nx">dedEnc</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="c1">// Example of setting the devices per-call.</span>
+    <span class="c1">//useMic: &#39;any&#39;,</span>
+    <span class="c1">//useSpeak: &#39;any&#39;,</span>
   <span class="p">});</span>
 <span class="p">};</span>
 </code></pre></div>
-<p>Now you should be able to make an audio call with Verto. But if you&#39;re able to make a new call you should be able do <a href="/verto-docs/tut/hanging-up-a-call.html">Hang up a Call</a>.</p>
+<h2 id="tracking-call-progress">Tracking call progress</h2>
+
+<p>The <code>onDialogState</code> callback can be used to track the progress of the call
+if desired. It&#39;s fired each time the call changes state.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// Receives call state messages from FreeSWITCH.</span>
+<span class="kd">function</span> <span class="nx">onDialogState</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s2">&quot;trying&quot;</span><span class="o">:</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="s2">&quot;answering&quot;</span><span class="o">:</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="s2">&quot;active&quot;</span><span class="o">:</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="s2">&quot;hangup&quot;</span><span class="o">:</span>
+      <span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Call ended with cause: &quot;</span> <span class="o">+</span> <span class="nx">d</span><span class="p">.</span><span class="nx">cause</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="s2">&quot;destroy&quot;</span><span class="o">:</span>
+      <span class="c1">// Some kind of client side cleanup...</span>
+      <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">vertoCallbacks</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">onDialogState</span><span class="o">:</span> <span class="nx">onDialogState</span><span class="p">,</span>
+  <span class="c1">// Other callbacks...</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>Now you should be able to make an audio call with Verto. But if you&#39;re able to make a new call you should be able to <a href="/verto-docs/tut/hanging-up-a-call.html">hang up a call</a>.</p>
+
+<p>You also may be interested in <a href="/verto-docs/tut/subscribing-to-the-live-array.html">receiving real-time updates from the conference</a>.</p>
 
 
                     </div>

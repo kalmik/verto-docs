@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width">
 
-        <title>Verto Docs - Installing Verto</title>
+        <title>Verto Docs - Testing bandwidth</title>
         <meta name="description" content="Verto Documentation">
 
         <link rel="stylesheet" href="/verto-docs/css/bootstrap.min.css">
@@ -64,7 +64,7 @@
             
             <li data-order="2">
                 
-                <a href="/verto-docs/tut/installing-verto.html" class="active">
+                <a href="/verto-docs/tut/installing-verto.html">
                     Installing Verto
                 </a>
                 
@@ -190,7 +190,7 @@
             
             <li data-order="16">
                 
-                <a href="/verto-docs/tut/testing-bandwidth.html">
+                <a href="/verto-docs/tut/testing-bandwidth.html" class="active">
                     Testing bandwidth
                 </a>
                 
@@ -228,42 +228,51 @@
 
                     <div id="content" class="col-sm-10">
                         <div class="page-header">
-    <h2>Installing Verto
+    <h2>Testing bandwidth
         
     </h2>
 </div>
 
-<p>Before we can use Verto, we&#39;ll need to install it. There are two options available:</p>
+<p>Since users can be operating under a wide variety of network conditions, it
+can be very helpful to perform a test to determine their bandwidth capacity.</p>
 
-<ul>
-<li>Install FreeSWITCH + Verto</li>
-<li>Install Verto only</li>
-</ul>
+<p>Fortunately, Verto makes this easy with a built-in bandwidth testing method.</p>
 
-<p>If you&#39;re going to use a self hosted FreeSWITCH server you can use the <a href="https://freeswitch.org/confluence/display/FREESWITCH/Installation">FreeSWITCH Installation Guide</a> and <a href="https://freeswitch.org/confluence/display/FREESWITCH/mod_verto">mod_verto Guide</a>.</p>
+<h2 id="performing-the-test">Performing the test</h2>
 
-<p>If you have an external FreeSWITCH server with mod_verto enabled or just wish to use Verto stand-alone, follow the next steps.</p>
-
-<h2 id="requirements">Requirements</h2>
-
-<p>We need <a href="https://nodejs.org/">Node.js</a> installed in order to have access to its package manager, <strong>npm</strong>.</p>
-
-<h2 id="installing">Installing</h2>
-
-<h3 id="verto">Verto</h3>
-
-<p>With <a href="https://nodejs.org/">Node.js</a> installed and Node Package Manager available, install verto library <strong>inside</strong> <code>lib/</code> directory.:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install verto
+<p>The test can be performed any time after the user has logged into the server.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">bandwidthTestData</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">testBandwidth</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Translates to 256KB.</span>
+  <span class="kd">var</span> <span class="nx">bytesToSendAndReceive</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">256</span><span class="p">;</span>
+  <span class="nx">vertoObj</span><span class="p">.</span><span class="nx">rpcClient</span><span class="p">.</span><span class="nx">speedTest</span><span class="p">(</span><span class="nx">bytesToSendAndReceive</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// These values are in kilobits/sec.</span>
+    <span class="kd">var</span> <span class="nx">upBand</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">upKPS</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">downBand</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">downKPS</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;[BANDWIDTH TEST] Up: &#39;</span> <span class="o">+</span> <span class="nx">upBand</span> <span class="o">+</span> <span class="s1">&#39;, Down: &#39;</span> <span class="o">+</span> <span class="nx">downBand</span><span class="p">);</span>
+    <span class="c1">// Store the results for later.</span>
+    <span class="nx">bandwidthTestData</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">}</span>
 </code></pre></div>
-<p>Verto library should be installed in <code>lib/node_modules/verto/</code> directory now.</p>
+<h2 id="passing-test-results-in-new-calls">Passing test results in new calls</h2>
 
-<h3 id="dependencies">Dependencies</h3>
-
-<p>Verto depends on jQuery and jQuery JSON, so let&#39;s install them too:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install jquery
-npm install jquery-json
+<p>Data returned from a bandwidth test can be used to set specific values for
+the <code>incomingBandwidth</code> and <code>outgoingBandwidth</code> call parameters, which
+will be used to calculate the best strategy for sending and receiving video
+within these bandwidth limits. For example:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">makeCall</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">currentCall</span> <span class="o">=</span> <span class="nx">vertoHandle</span><span class="p">.</span><span class="nx">newCall</span><span class="p">({</span>
+    <span class="nx">outgoingBandwidth</span><span class="o">:</span> <span class="nx">bandwidthTestData</span><span class="p">.</span><span class="nx">upKPS</span><span class="p">,</span>
+    <span class="nx">incomingBandwidth</span><span class="o">:</span> <span class="nx">bandwidthTestData</span><span class="p">.</span><span class="nx">downKPS</span><span class="p">,</span>
+    <span class="c1">// Other params...</span>
+  <span class="p">});</span>
+<span class="p">};</span>
 </code></pre></div>
-<p><a href="/verto-docs/tut/initializing-verto.html">Next step is import and initialize Verto in our project</a>.</p>
+<h2 id="using-test-results-to-calculate-video-resolution">Using test results to calculate video resolution</h2>
+
+<p>You also may wish to use the tested upload speed to assist in calculating the
+video resolution to send to the server (as set in <code>vertoHandle.videoParams</code>).</p>
 
 
                     </div>
@@ -279,7 +288,7 @@ npm install jquery-json
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
     var disqus_shortname = 'vertodocs'; // required: replace example with your forum shortname
-    var disqus_identifier = '2015-10-19-installing-verto';
+    var disqus_identifier = '2016-08-11-testing-bandwidth';
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {

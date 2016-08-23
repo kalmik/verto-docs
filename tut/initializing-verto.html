@@ -8,7 +8,7 @@
         <title>Verto Docs - Initializing Verto</title>
         <meta name="description" content="Verto Documentation">
 
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/verto-docs/css/bootstrap.min.css">
         <link rel="stylesheet" href="/verto-docs/css/syntax.css">
         <link rel="stylesheet" href="/verto-docs/css/main.css">
     </head>
@@ -151,6 +151,51 @@
                 
             </li>
         
+            
+            <li data-order="12">
+                
+                <a href="/verto-docs/tut/subscribing-to-the-live-array.html">
+                    Subscribing to the live array
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="13">
+                
+                <a href="/verto-docs/tut/sending-conference-commands.html">
+                    Sending conference commands
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="14">
+                
+                <a href="/verto-docs/tut/sending-dtmf.html">
+                    Sending DTMF
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="15">
+                
+                <a href="/verto-docs/tut/sending-chat-messages.html">
+                    Sending chat messages
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="16">
+                
+                <a href="/verto-docs/tut/testing-bandwidth.html">
+                    Testing bandwidth
+                </a>
+                
+            </li>
+        
     
         
         
@@ -202,18 +247,50 @@
 </code></pre></div>
 <h2 id="bootstrapping">Bootstrapping</h2>
 
-<p>Bootstrap function will connect to Verto server and log in with specified credentials and configurations.</p>
+<p>The bootstrap function will connect to the Verto server and log in with specified credentials and configurations.</p>
+
+<p>Replace the values in brackets with the information for your FreeSWITCH and STUN servers.</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">bootstrap</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Create a new verto instance:</span>
+  <span class="c1">// This step performs a user login to FreeSWITCH via secure websocket.</span>
+  <span class="c1">// The user must be properly configured in the FreeSWITCH user directory.</span>
   <span class="nx">vertoHandle</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">verto</span><span class="p">({</span>
-    <span class="nx">login</span><span class="o">:</span> <span class="s1">&#39;1008@127.0.0.1&#39;</span><span class="p">,</span>
-    <span class="nx">passwd</span><span class="o">:</span> <span class="s1">&#39;1234&#39;</span><span class="p">,</span>
-    <span class="nx">socketUrl</span><span class="o">:</span> <span class="s1">&#39;wss://127.0.0.1:8082&#39;</span><span class="p">,</span>
+    <span class="nx">login</span><span class="o">:</span> <span class="s1">&#39;[USER]@[YOUR_FREESWITCH_SERVER_DOMAIN]&#39;</span><span class="p">,</span>
+    <span class="nx">passwd</span><span class="o">:</span> <span class="s1">&#39;[PASSWORD]&#39;</span><span class="p">,</span>
+    <span class="c1">// As configured in verto.conf.xml on the server.</span>
+    <span class="nx">socketUrl</span><span class="o">:</span> <span class="s1">&#39;wss://[YOUR_FREESWITCH_SERVER_DOMAIN]:8082&#39;</span><span class="p">,</span>
+    <span class="c1">// TODO: Where is this file, on the server? What is the base path?</span>
     <span class="nx">ringFile</span><span class="o">:</span> <span class="s1">&#39;sounds/bell_ring2.wav&#39;</span><span class="p">,</span>
+    <span class="c1">// STUN/TURN server config, more than one is allowed.</span>
+    <span class="c1">// Instead of an array of objects, you can also pass a Boolean value,</span>
+    <span class="c1">// false disables STUN, true uses the default Google STUN servers.</span>
+    <span class="nx">iceServers</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;stun:[YOUR_STUN_SERVER]&#39;</span><span class="p">,</span>
+      <span class="p">},</span>
+    <span class="p">],</span>
+    <span class="c1">// These can be set per-call as well as per-login.</span>
     <span class="nx">deviceParams</span><span class="o">:</span> <span class="p">{</span>
-      <span class="nx">useMic</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-      <span class="nx">useSpeak</span><span class="o">:</span> <span class="kc">true</span>
+      <span class="nx">useMic</span><span class="o">:</span> <span class="s1">&#39;any&#39;</span><span class="p">,</span>
+      <span class="nx">useSpeak</span><span class="o">:</span> <span class="s1">&#39;any&#39;</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="nx">iceServers</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="c1">// Below are some more advanced configuration parameters.</span>
+    <span class="c1">// Google Chrome specific adjustments/filters for audio.</span>
+    <span class="c1">// Official documentation is scant, best to try them out and see!</span>
+    <span class="c1">//audioParams: {</span>
+    <span class="c1">//  googEchoCancellation: true,</span>
+    <span class="c1">//  googAutoGainControl: true,</span>
+    <span class="c1">//  googNoiseSuppression: true,</span>
+    <span class="c1">//  googHighpassFilter: true,</span>
+    <span class="c1">//  googTypingNoiseDetection: true,</span>
+    <span class="c1">//  googEchoCancellation2: false,</span>
+    <span class="c1">//  googAutoGainControl2: false,</span>
+    <span class="c1">//},</span>
+    <span class="c1">// Internal session ID used by Verto to track the call, eg. for call</span>
+    <span class="c1">// recovery. A random one will be generated if none is provided, and,</span>
+    <span class="c1">// it can be useful to provide a custom ID to store and reference for</span>
+    <span class="c1">// other purposes.</span>
+    <span class="c1">//sessid: sessid,</span>
   <span class="p">},</span> <span class="nx">vertoCallbacks</span><span class="p">);</span>
 <span class="p">};</span>
 </code></pre></div>
@@ -224,9 +301,14 @@
 <p>At first we&#39;ll handle the login event:</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">onWSLogin</span><span class="p">(</span><span class="nx">verto</span><span class="p">,</span> <span class="nx">success</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;onWSLogin&#39;</span><span class="p">,</span> <span class="nx">success</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">success</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// At this point you&#39;re connected to the FreeSWITCH server and logged</span>
+    <span class="c1">// in, ready to place a call to the conference, or run a test for the</span>
+    <span class="c1">// user&#39;s bandwidth.</span>
+  <span class="p">}</span>
 <span class="p">};</span>
 </code></pre></div>
-<p>When we add it to the Verto Callbacks dictionary it will print success variable value on browser&#39;s console when web socket login task is finished.</p>
+<p>When we add it to the Verto Callbacks dictionary it will print the <code>success</code> variable value on browser&#39;s console when web socket login task is finished.</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">vertoCallbacks</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">onWSLogin</span><span class="o">:</span> <span class="nx">onWSLogin</span><span class="p">,</span>
 <span class="p">};</span>
@@ -243,15 +325,7 @@
 
   <span class="kd">function</span> <span class="nx">bootstrap</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">vertoHandle</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">verto</span><span class="p">({</span>
-      <span class="nx">login</span><span class="o">:</span> <span class="s1">&#39;1008@127.0.0.1&#39;</span><span class="p">,</span>
-      <span class="nx">passwd</span><span class="o">:</span> <span class="s1">&#39;1234&#39;</span><span class="p">,</span>
-      <span class="nx">socketUrl</span><span class="o">:</span> <span class="s1">&#39;wss://127.0.0.1:8082&#39;</span><span class="p">,</span>
-      <span class="nx">ringFile</span><span class="o">:</span> <span class="s1">&#39;sounds/bell_ring2.wav&#39;</span><span class="p">,</span>
-      <span class="nx">deviceParams</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">useMic</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="nx">useSpeak</span><span class="o">:</span> <span class="kc">true</span>
-      <span class="p">},</span>
-      <span class="nx">iceServers</span><span class="o">:</span> <span class="kc">true</span>
+      <span class="c1">// The params...</span>
     <span class="p">},</span> <span class="nx">vertoCallbacks</span><span class="p">);</span>
   <span class="p">};</span>
 
@@ -293,7 +367,7 @@
 </code></pre></div>
 <p>Now you should be able to access <a href="http://127.0.0.1:8000/src/index.html">http://127.0.0.1:8000/src/index.html</a> and test Verto connection with the browser&#39;s console open.</p>
 
-<p>If everything went fine you should see a console log with <code>onWSLogin true</code> and can now <a href="/verto-docs/tut/making-a-call.html">Make a Call</a>.</p>
+<p>If everything went fine you should see a console log with <code>onWSLogin true</code> and can now <a href="/verto-docs/tut/making-a-call.html">make a call</a>, or <a href="/verto-docs/tut/testing-bandwidth.html">test your bandwidth</a>.</p>
 
 
                     </div>

@@ -8,7 +8,7 @@
         <title>Verto Docs - Adding Video Support</title>
         <meta name="description" content="Verto Documentation">
 
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/verto-docs/css/bootstrap.min.css">
         <link rel="stylesheet" href="/verto-docs/css/syntax.css">
         <link rel="stylesheet" href="/verto-docs/css/main.css">
     </head>
@@ -151,6 +151,51 @@
                 
             </li>
         
+            
+            <li data-order="12">
+                
+                <a href="/verto-docs/tut/subscribing-to-the-live-array.html">
+                    Subscribing to the live array
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="13">
+                
+                <a href="/verto-docs/tut/sending-conference-commands.html">
+                    Sending conference commands
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="14">
+                
+                <a href="/verto-docs/tut/sending-dtmf.html">
+                    Sending DTMF
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="15">
+                
+                <a href="/verto-docs/tut/sending-chat-messages.html">
+                    Sending chat messages
+                </a>
+                
+            </li>
+        
+            
+            <li data-order="16">
+                
+                <a href="/verto-docs/tut/testing-bandwidth.html">
+                    Testing bandwidth
+                </a>
+                
+            </li>
+        
     
         
         
@@ -202,38 +247,44 @@
 <h2 id="editing-bootstrap">Editing bootstrap</h2>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">bootstrap</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">vertoHandle</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">verto</span><span class="p">({</span>
-    <span class="nx">login</span><span class="o">:</span> <span class="s1">&#39;1008@127.0.0.1&#39;</span><span class="p">,</span>
-    <span class="nx">passwd</span><span class="o">:</span> <span class="s1">&#39;1234&#39;</span><span class="p">,</span>
-    <span class="nx">socketUrl</span><span class="o">:</span> <span class="s1">&#39;wss://127.0.0.1:8082&#39;</span><span class="p">,</span>
-    <span class="nx">ringFile</span><span class="o">:</span> <span class="s1">&#39;sounds/bell_ring2.wav&#39;</span><span class="p">,</span>
-    <span class="nx">tag</span><span class="o">:</span> <span class="s1">&#39;video-container&#39;</span><span class="p">,</span> <span class="c1">// specifying video tag in our html</span>
+    <span class="c1">// ID of HTML video tag where the video feed is placed.</span>
+    <span class="nx">tag</span><span class="o">:</span> <span class="s2">&quot;video-container&quot;</span><span class="p">,</span>
     <span class="nx">deviceParams</span><span class="o">:</span> <span class="p">{</span>
-      <span class="nx">useCamera</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="c1">// asking for camera permissions and devices</span>
-      <span class="nx">useMic</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-      <span class="nx">useSpeak</span><span class="o">:</span> <span class="kc">true</span>
+      <span class="c1">// Asking for camera permissions and devices.</span>
+      <span class="nx">useCamera</span><span class="o">:</span> <span class="s1">&#39;any&#39;</span><span class="p">,</span>
+      <span class="nx">useMic</span><span class="o">:</span> <span class="s1">&#39;any&#39;</span><span class="p">,</span>
+      <span class="nx">useSpeak</span><span class="o">:</span> <span class="s1">&#39;any&#39;</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="nx">iceServers</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="c1">// Other params...</span>
   <span class="p">},</span> <span class="nx">vertoCallbacks</span><span class="p">);</span>
 <span class="p">};</span>
 </code></pre></div>
 <h2 id="editing-makecall">Editing makeCall</h2>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">makeCall</span><span class="p">()</span> <span class="p">{</span>
+
+  <span class="c1">// Sets the parameters for the video stream that will be sent to the</span>
+  <span class="c1">// videoconference.</span>
+  <span class="c1">// Hint: Use the upKPS result from a bandwidth test to determine the video</span>
+  <span class="c1">// resolution to send!</span>
+  <span class="nx">vertoHandle</span><span class="p">.</span><span class="nx">videoParams</span><span class="p">({</span>
+    <span class="c1">// Dimensions of the video feed to send.</span>
+    <span class="nx">minWidth</span><span class="o">:</span> <span class="mi">320</span><span class="p">,</span>
+    <span class="nx">minHeight</span><span class="o">:</span> <span class="mi">240</span><span class="p">,</span>
+    <span class="nx">maxWidth</span><span class="o">:</span> <span class="mi">640</span><span class="p">,</span>
+    <span class="nx">maxHeight</span><span class="o">:</span> <span class="mi">480</span><span class="p">,</span>
+    <span class="c1">// The minimum frame rate of the client camera, Verto will fail if it&#39;s</span>
+    <span class="c1">// less than this.</span>
+    <span class="nx">minFrameRate</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="c1">// The maximum frame rate to send from the camera.</span>
+    <span class="nx">vertoBestFrameRate</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
+  <span class="p">});</span>
+
   <span class="nx">currentCall</span> <span class="o">=</span> <span class="nx">vertoHandle</span><span class="p">.</span><span class="nx">newCall</span><span class="p">({</span>
-    <span class="nx">destination_number</span><span class="o">:</span> <span class="s2">&quot;3520&quot;</span><span class="p">,</span>
-    <span class="nx">caller_id_name</span><span class="o">:</span> <span class="s2">&quot;Test Guy&quot;</span><span class="p">,</span>
-    <span class="nx">caller_id_number</span><span class="o">:</span> <span class="s2">&quot;1008&quot;</span><span class="p">,</span>
-    <span class="nx">outgoingBandwidth</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="nx">incomingBandwidth</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="nx">useVideo</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="c1">// telling verto to make a call with video support</span>
-    <span class="nx">mirrorInput</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="c1">// telling verto to mirror user&#39;s webcam</span>
-    <span class="nx">useStereo</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">useMic</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">useSpeak</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nx">dedEnc</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nx">userVariables</span><span class="o">:</span> <span class="p">{</span>
-      <span class="nx">avatar</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-      <span class="nx">email</span><span class="o">:</span> <span class="s2">&quot;test@test.com&quot;</span>
-    <span class="p">}</span>
+    <span class="c1">// Enable video support.</span>
+    <span class="nx">useVideo</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="c1">// Mirror local user&#39;s webcam.</span>
+    <span class="nx">mirrorInput</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="c1">// Other params...</span>
   <span class="p">});</span>
 <span class="p">};</span>
 </code></pre></div>
@@ -248,7 +299,7 @@
 </code></pre></div>
 <p>Now you have full video support in Verto :)</p>
 
-<p>And if somethings fails, your internet connection goes down for a while or you browser crashes? <a href="/verto-docs/tut/recovering-a-call.html">Recovering a Call</a> looks like something more complex to do, doesn&#39;t?</p>
+<p>And if something fails, your internet connection goes down for a while or you browser crashes? <a href="/verto-docs/tut/recovering-a-call.html">Recovering a call</a> looks like something more complex to do, doesn&#39;t?</p>
 
 
                     </div>
